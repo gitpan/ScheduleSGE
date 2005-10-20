@@ -19,7 +19,7 @@ use Exporter;
 
 use vars qw(@ISA @EXPORT_OK);
 @ISA = qw(Schedule::SGE Exporter);
-@EXPORT_OK = qw(command execute environment name project output_file error_file use_cwd notify mailto);
+@EXPORT_OK = qw(command execute environment name project output_file error_file use_cwd notify mailto job_id);
 our $VERSION = '0.01';
 
 =head2 command()
@@ -189,7 +189,18 @@ sub mailto {
  return $self->{'cwd'};
 }
 
-  
+
+=head2 job_id()
+
+The ID of the job that is submitted. This is only available after the command has begun, and is the ID of your job in the queue. Returns false if the job has not been executed or there was an error with the execution.
+
+=cut
+
+sub job_id {
+ my ($self)=@_;
+ return $self->{'job_id'};
+}
+
 =head2 _run()
 
 An internal method to execute the command
@@ -230,10 +241,11 @@ sub _run {
  open (IN, "/tmp/$$.out") || die "Can't open /tmp/$$.out even though everything appeared to work fine";
  my $line=<IN>;
  close IN;
- $line =~ /Your job (\d+)/;
+ $line =~ /Your job (\d+)/i;
  my $jobnumber=$1;
  if ($jobnumber) {
   unlink("/tmp/$$.out");
+  $self->{'job_id'}=$jobnumber;
   return $jobnumber;
  }
  else {

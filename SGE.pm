@@ -20,7 +20,7 @@ Schedule::SGE is a suite of modules for interacting with the Sun Grid Engine. Th
 package Schedule::SGE;
 use strict;
 
-use Schedule::SGE::Run qw/command execute environment name project output_file error_file use_cwd notify mailto/;
+use Schedule::SGE::Run qw/command execute environment name project output_file error_file use_cwd notify mailto job_id/;
 use Schedule::SGE::Status qw/user status brief_job_stats all_jobs/;
 use Schedule::SGE::Control qw/qdel/;
 
@@ -95,26 +95,26 @@ We will also take a reference to a hash as the single argument. In this case, we
 
 e.g.s:
 
- # using a hash to set all the executables at once (recommended as we don't have to guess anything)
- my $exec={'qsub'=>'/usr/local/bin/qsub', 'qstat'=>'/usr/local/bin/qstat'}
- $sge->exectuable($exec);
- my $pid=$sge->job_id;
+# using a hash to set all the executables at once (recommended as we don't have to guess anything)
+my $exec={'qsub'=>'/usr/local/bin/qsub', 'qstat'=>'/usr/local/bin/qstat'}
+$sge->exectuable($exec);
+my $pid=$sge->job_id;
 
 
- # guessing all the executables (not recommended)
- $sge->exectuables();
- my $pid=$sge->job_id;
+# guessing all the executables (not recommended)
+$sge->exectuables();
+my $pid=$sge->job_id;
 
- # getting the value for qsub
- my $qsubexec=$sge->executable('qsub');
+# getting the value for qsub
+my $qsubexec=$sge->executable('qsub');
 
- # setting a single value for qsub only
- my $qsubexec=$sge->executable('qsub', '/usr/local/bin/qsub');
+# setting a single value for qsub only
+my $qsubexec=$sge->executable('qsub', '/usr/local/bin/qsub');
 
 At the moment we try and figure out locations for each of the following applications
- qstat
- qsub
- qdel
+qstat
+qsub
+qdel
 
 =cut
 
